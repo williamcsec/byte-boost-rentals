@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import warzoneImage from "@/assets/game-warzone.jpg";
 import horizonImage from "@/assets/game-horizon.jpg";
 import sportsImage from "@/assets/game-sports.jpg";
+import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 
 const games = [
   {
@@ -26,10 +27,21 @@ const games = [
 ];
 
 const GameCollection = () => {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation({ threshold: 0.3 });
+  const { ref: gamesRef, visibleItems } = useStaggeredAnimation(games.length, 200);
+  const { ref: buttonRef, isVisible: buttonVisible } = useScrollAnimation({ threshold: 0.5 });
+
   return (
-    <section className="py-20">
+    <section className="py-20 relative overflow-hidden">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div 
+          ref={headerRef}
+          className={`text-center mb-16 transition-all duration-1000 ${
+            headerVisible 
+              ? 'animate-slide-down-fade' 
+              : 'opacity-0 -translate-y-8'
+          }`}
+        >
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Epic Game Collection
           </h2>
@@ -38,11 +50,18 @@ const GameCollection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div 
+          ref={gamesRef}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12"
+        >
           {games.map((game, index) => (
             <div 
               key={game.id} 
-              className="group relative overflow-hidden rounded-2xl bg-card hover:scale-105 transition-all duration-500 cursor-pointer"
+              className={`group relative overflow-hidden rounded-2xl bg-card hover:scale-105 transition-all duration-500 cursor-pointer ${
+                visibleItems.includes(index) 
+                  ? 'animate-card-flip' 
+                  : 'opacity-0 translate-y-8'
+              }`}
               style={{ animationDelay: `${index * 200}ms` }}
             >
               <div className="aspect-[4/3] overflow-hidden">
@@ -55,7 +74,7 @@ const GameCollection = () => {
               </div>
               
               {game.isVR && (
-                <div className="absolute top-4 right-4 bg-gaming-purple text-white px-3 py-1 rounded-full text-sm font-semibold">
+                <div className="absolute top-4 right-4 bg-gaming-purple text-white px-3 py-1 rounded-full text-sm font-semibold animate-glow-pulse">
                   VR
                 </div>
               )}
@@ -69,12 +88,26 @@ const GameCollection = () => {
           ))}
         </div>
 
-        <div className="text-center">
-          <Button variant="gaming" size="lg">
+        <div 
+          ref={buttonRef}
+          className={`text-center transition-all duration-800 ${
+            buttonVisible 
+              ? 'animate-scale-rotate' 
+              : 'opacity-0 scale-95'
+          }`}
+        >
+          <Button variant="gaming" size="lg" className="shadow-glow-gaming hover:shadow-glow-accent">
             View All Games
             <ArrowRight className="h-5 w-5 ml-2" />
           </Button>
         </div>
+      </div>
+
+      {/* Background particles */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-10 right-10 w-3 h-3 bg-gaming-blue/20 rounded-full animate-particle-float" />
+        <div className="absolute top-1/2 left-5 w-2 h-2 bg-gaming-purple/30 rounded-full animate-particle-float" style={{ animationDelay: '3s' }} />
+        <div className="absolute bottom-20 right-1/3 w-1.5 h-1.5 bg-gaming-pink/25 rounded-full animate-particle-float" style={{ animationDelay: '1.5s' }} />
       </div>
     </section>
   );
