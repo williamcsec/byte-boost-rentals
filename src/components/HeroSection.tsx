@@ -41,7 +41,7 @@ const HeroSection = () => {
               <ArrowRight className="h-5 w-5 ml-2" />
             </Button>
             
-            <Button variant="outline" size="lg" className="text-lg px-8 py-4 h-auto">
+            <Button variant="accent" size="lg" className="text-lg px-8 py-4 h-auto border border-gaming-green/30 hover:border-gaming-green/60 backdrop-blur-sm">
               <Calendar className="h-5 w-5 mr-2" />
               Browse Games
             </Button>
