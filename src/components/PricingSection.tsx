@@ -13,7 +13,7 @@ const pricingPlans = [
     features: [
       "Any PS5 Game",
       "1-2 Players",
-      "Full HD Gaming",
+      "AAA 4K Gaming",
       "Standard Controller"
     ],
     popular: false
